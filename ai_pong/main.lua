@@ -258,13 +258,17 @@ function updatePlayersMovement()
         elseif num_players == 0 then
             if ball.y < player2.y then
                 player2.dy = -PADDLE_SPEED * smoothing_factor
-            else
+            elseif ball.y > player2.y +  PADDLE_HEIGHT then
                 player2.dy = PADDLE_SPEED * smoothing_factor
+            else
+                player2.dy = 0
             end
             if ball.y < player1.y then
                 player1.dy = -PADDLE_SPEED * smoothing_factor
-            else
+            elseif ball.y > player1.y +  PADDLE_HEIGHT then
                 player1.dy = PADDLE_SPEED * smoothing_factor
+            else
+                player1.dy = 0
             end
         else
             updatePlayer1Movement()
