@@ -134,6 +134,20 @@ function love.update(dt)
             ball.dx = -math.random(140, 200)
         end
     elseif gameState == 'play' then
+        checkPlayConditions()
+        updatePlayersMovement()
+
+    -- update our ball based on its DX and DY only if we're in play state;
+    -- scale the velocity by dt so movement is framerate-independent
+    if gameState == 'play' then
+        ball:update(dt)
+    end
+
+    player1:update(dt)
+    player2:update(dt)
+end
+
+function checkPlayConditions()
         -- detect ball collision with paddles, reversing dx if true and
         -- slightly increasing it, then altering the dy based on the position of collision
         if ball:collides(player1) then
@@ -211,16 +225,7 @@ function love.update(dt)
         end
     end
 
-    updatePlayersMovement()
-
-    -- update our ball based on its DX and DY only if we're in play state;
-    -- scale the velocity by dt so movement is framerate-independent
-    if gameState == 'play' then
-        ball:update(dt)
-    end
-
-    player1:update(dt)
-    player2:update(dt)
+ 
 end
 
 function updatePlayer1Movement()
@@ -246,34 +251,32 @@ function updatePlayer2Movement()
 end
 
 function updatePlayersMovement()
-    if gameState == 'play' then
-        smoothing_factor = 0.52
-        if num_players == 1 then 
-            if ball.y < player2.y then
-                player2.dy = -PADDLE_SPEED
-            else
-                player2.dy = PADDLE_SPEED
-            end
-            updatePlayer1Movement()
-        elseif num_players == 0 then
-            if ball.y < player2.y then
-                player2.dy = -PADDLE_SPEED * smoothing_factor
-            elseif ball.y > player2.y +  PADDLE_HEIGHT then
-                player2.dy = PADDLE_SPEED * smoothing_factor
-            else
-                player2.dy = 0
-            end
-            if ball.y < player1.y then
-                player1.dy = -PADDLE_SPEED * smoothing_factor
-            elseif ball.y > player1.y +  PADDLE_HEIGHT then
-                player1.dy = PADDLE_SPEED * smoothing_factor
-            else
-                player1.dy = 0
-            end
+    smoothing_factor = 0.55
+    if num_players == 1 then 
+        if ball.y < player2.y then
+            player2.dy = -PADDLE_SPEED
         else
-            updatePlayer1Movement()
-            updatePlayer2Movement()
+            player2.dy = PADDLE_SPEED
         end
+        updatePlayer1Movement()
+    elseif num_players == 0 then
+        if ball.y < player2.y then
+            player2.dy = -PADDLE_SPEED * smoothing_factor
+        elseif ball.y > player2.y +  PADDLE_HEIGHT then
+            player2.dy = PADDLE_SPEED * smoothing_factor
+        else
+            player2.dy = 0
+        end
+        if ball.y < player1.y then
+            player1.dy = -PADDLE_SPEED * smoothing_factor
+        elseif ball.y > player1.y +  PADDLE_HEIGHT then
+            player1.dy = PADDLE_SPEED * smoothing_factor
+        else
+            player1.dy = 0
+        end
+    else
+        updatePlayer1Movement()
+        updatePlayer2Movement()
     end
 end
 
