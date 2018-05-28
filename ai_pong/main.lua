@@ -206,6 +206,20 @@ function love.update(dt)
         end
     end
 
+    updatePlayersMovement()
+
+    -- update our ball based on its DX and DY only if we're in play state;
+    -- scale the velocity by dt so movement is framerate-independent
+    if gameState == 'play' then
+        ball:update(dt)
+    end
+
+    player1:update(dt)
+    player2:update(dt)
+end
+
+function updatePlayersMovement()
+
     -- player 1 movement
     if love.keyboard.isDown('w') then
         player1.dy = -PADDLE_SPEED
@@ -223,15 +237,6 @@ function love.update(dt)
     else
         player2.dy = 0
     end
-
-    -- update our ball based on its DX and DY only if we're in play state;
-    -- scale the velocity by dt so movement is framerate-independent
-    if gameState == 'play' then
-        ball:update(dt)
-    end
-
-    player1:update(dt)
-    player2:update(dt)
 end
 
 --[[
