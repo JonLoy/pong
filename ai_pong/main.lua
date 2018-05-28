@@ -218,8 +218,7 @@ function love.update(dt)
     player2:update(dt)
 end
 
-function updatePlayersMovement()
-
+function updatePlayer1Movement()
     -- player 1 movement
     if love.keyboard.isDown('w') then
         player1.dy = -PADDLE_SPEED
@@ -228,7 +227,9 @@ function updatePlayersMovement()
     else
         player1.dy = 0
     end
+end
 
+function updatePlayer2Movement()
     -- player 2 movement
     if love.keyboard.isDown('up') then
         player2.dy = -PADDLE_SPEED
@@ -236,6 +237,34 @@ function updatePlayersMovement()
         player2.dy = PADDLE_SPEED
     else
         player2.dy = 0
+    end
+end
+
+function updatePlayersMovement()
+    if gameState == 'play' then
+        smoothing_factor = 0.52
+        if num_players == 1 then 
+            if ball.y < player2.y then
+                player2.dy = -PADDLE_SPEED
+            else
+                player2.dy = PADDLE_SPEED
+            end
+            updatePlayer1Movement()
+        elseif num_players == 0 then
+            if ball.y < player2.y then
+                player2.dy = -PADDLE_SPEED * smoothing_factor
+            else
+                player2.dy = PADDLE_SPEED * smoothing_factor
+            end
+            if ball.y < player1.y then
+                player1.dy = -PADDLE_SPEED * smoothing_factor
+            else
+                player1.dy = PADDLE_SPEED * smoothing_factor
+            end
+        else
+            updatePlayer1Movement()
+            updatePlayer2Movement()
+        end
     end
 end
 
@@ -284,7 +313,7 @@ function love.keypressed(key)
         end
     elseif key == '2' then
         if gameState == 'player_selection' then
-            num_players = 1 
+            num_players = 2 
             gameState = 'serve'
         end
     end
