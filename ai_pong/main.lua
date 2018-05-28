@@ -50,6 +50,11 @@ VIRTUAL_HEIGHT = 243
 
 -- speed at which we will move our paddle; multiplied by dt in update
 PADDLE_SPEED = 200
+PADDLE_HEIGHT = 20
+PADDLE_WIDTH = 5
+
+BALL_WIDTH = 4
+BALL_HEIGHT = 4
 
 --[[
     Runs when the game first starts up, only once; used to initialize the game.
@@ -99,9 +104,9 @@ function love.load()
     servingPlayer = 1
 
     -- initialize player paddles and ball
-    player1 = Paddle(10, 30, 5, 20)
-    player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
-    ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
+    player1 = Paddle(10, 30, PADDLE_WIDTH, PADDLE_HEIGHT)
+    player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, PADDLE_WIDTH, PADDLE_HEIGHT)
+    ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, BALL_WIDTH, BALL_HEIGHT)
 
     gameState = 'start'
 end
@@ -133,7 +138,7 @@ function love.update(dt)
         -- slightly increasing it, then altering the dy based on the position of collision
         if ball:collides(player1) then
             ball.dx = -ball.dx * 1.03
-            ball.x = player1.x + 5
+            ball.x = player1.x + PADDLE_WIDTH
 
             -- keep velocity going in the same direction, but randomize it
             if ball.dy < 0 then
@@ -146,7 +151,7 @@ function love.update(dt)
         end
         if ball:collides(player2) then
             ball.dx = -ball.dx * 1.03
-            ball.x = player2.x - 4
+            ball.x = player2.x - BALL_WIDTH 
 
             -- keep velocity going in the same direction, but randomize it
             if ball.dy < 0 then
